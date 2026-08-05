@@ -1,0 +1,1 @@
+echo "<?php echo 'Apache OK - folder terbaca'; ?>" | sudo tee /var/www/html/gas-paman-main/test.php
