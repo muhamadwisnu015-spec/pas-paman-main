@@ -262,14 +262,6 @@ foreach ($rekapAgenKabupaten as $kab => $n) {
                 <p class="text-[10px] text-orange-600 font-bold mt-2"><i class="fas fa-arrow-right mr-1"></i>Review sekarang</p>
                 <i class="fas fa-clock absolute -right-4 -bottom-4 text-7xl text-gray-50 opacity-10 group-hover:opacity-20 transition-opacity"></i>
             </a>
-
-            <a href="periode-agen" class="stat-card bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm relative overflow-hidden group block">
-                <div class="absolute top-0 left-0 w-2 h-full bg-gray-800"></div>
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Periode Agen</p>
-                <h3 class="text-4xl font-black text-gray-900 mt-4"><?= $agenBerjalan ?></h3>
-                <p class="text-[10px] text-orange-600 font-bold mt-2"><i class="fas fa-arrow-right mr-1"></i>Sedang berjalan<?= $agenBelumAturPeriode > 0 ? ' &middot; ' . $agenBelumAturPeriode . ' belum diatur' : '' ?></p>
-                <i class="fas fa-calendar-days absolute -right-4 -bottom-4 text-7xl text-gray-50 opacity-10 group-hover:opacity-20 transition-opacity"></i>
-            </a>
         </div>
 
         <!-- Rata-rata Test + Sertifikat -->

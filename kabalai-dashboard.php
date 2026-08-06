@@ -8,10 +8,17 @@ require_once 'core/auth.php';
 require_once 'core/ntb_helper.php';
 
 cek_login();
-if ($_SESSION['role'] !== 'admin') {
+// Dashboard Kabalai = tampilan sama dengan Admin; beda hanya penekanan fitur TTD sertifikat
+if ($_SESSION['role'] !== 'kabalai') {
+    if ($_SESSION['role'] === 'admin') {
+        header("Location: admin-dashboard");
+        exit;
+    }
     header("Location: dashboard");
     exit;
 }
+$isKabalai = true;
+
 
 // Filter periode (sama gaya form di Manajemen Agen)
 $tgl_mulai   = $_GET['mulai'] ?? '';
@@ -191,17 +198,17 @@ foreach ($rekapAgenKabupaten as $kab => $n) {
                         <span class="px-2 py-0.5 bg-red-800 text-white text-[8px] font-black uppercase tracking-widest rounded-md">Panel Kendali</span>
                         <span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-[8px] font-black uppercase tracking-widest rounded-md">GAS-PAMAN</span>
                     </div>
-                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Monitoring Admin</h2>
+                    <h2 class="text-3xl font-black text-gray-900 tracking-tight">Monitoring Kepala Balai</h2>
                     <p class="text-gray-500 text-sm font-medium italic">"Keluarga Sadar Obat dan Makanan Aman"</p>
                 </div>
             </div>
             <div class="bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-3">
                 <div class="w-10 h-10 bg-red-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-100">
-                    <i class="fas fa-user-shield text-sm"></i>
+                    <i class="fas fa-user-tie text-sm"></i>
                 </div>
                 <div>
                     <p class="text-[10px] font-black text-gray-400 uppercase leading-none mb-1">Status Login</p>
-                    <p class="text-sm font-bold text-red-700 uppercase leading-none">ADMIN BBPOM</p>
+                    <p class="text-sm font-bold text-red-700 uppercase leading-none">KEPALA BALAI</p>
                 </div>
             </div>
         </header>
@@ -222,7 +229,7 @@ foreach ($rekapAgenKabupaten as $kab => $n) {
                 <i class="fas fa-filter mr-1"></i> Terapkan Periode
             </button>
             <?php if ($filterPeriode): ?>
-            <a href="admin-dashboard" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 text-[10px] font-black uppercase tracking-widest rounded-xl">Reset</a>
+            <a href="kabalai-dashboard" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 text-[10px] font-black uppercase tracking-widest rounded-xl">Reset</a>
             <p class="text-xs text-orange-600 font-bold ml-2 self-center">
                 Periode: <?= date('d M Y', strtotime($tgl_mulai)) ?> – <?= date('d M Y', strtotime($tgl_selesai)) ?>
             </p>
@@ -300,19 +307,23 @@ foreach ($rekapAgenKabupaten as $kab => $n) {
                     </div>
                 </div>
             </div>
-            <div class="bg-white p-7 rounded-[32px] border border-gray-100 shadow-sm">
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-4">Sertifikat Post-Test</p>
+            <a href="sertifikat-approval" class="bg-white p-7 rounded-[32px] border border-gray-100 shadow-sm block hover:shadow-md transition-all relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-red-800"></div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-4">Sertifikat Post-Test — Tanda Tangan Elektronik</p>
                 <div class="flex items-end gap-8">
-                    <a href="hasil-test-admin?jenis=post_test" class="hover:opacity-80">
+                    <div>
                         <p class="text-[9px] font-bold text-green-600 uppercase">Sudah TTD</p>
                         <p class="text-3xl font-black text-gray-900"><?= $sertDisetujui ?></p>
-                    </a>
-                    <a href="hasil-test-admin?jenis=post_test" class="hover:opacity-80">
+                    </div>
+                    <div>
                         <p class="text-[9px] font-bold text-orange-600 uppercase">Menunggu TTD</p>
                         <p class="text-3xl font-black text-gray-900"><?= $sertMenunggu ?></p>
-                    </a>
+                    </div>
                 </div>
-            </div>
+                <p class="text-[10px] text-red-800 font-black uppercase tracking-widest mt-4">
+                    <i class="fas fa-file-signature mr-1"></i> Buka Persetujuan Sertifikat
+                </p>
+            </a>
         </div>
 
         <!-- Peta NTB -->
