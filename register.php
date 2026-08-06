@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $usia          = filter_var($_POST['usia'], FILTER_SANITIZE_NUMBER_INT);
     $nama_instansi = htmlspecialchars($_POST['nama_instansi']);
-    $nik           = htmlspecialchars($_POST['nik']);
     $nomor_hp      = htmlspecialchars($_POST['nomor_hp']);
     $password      = $_POST['password'];
     $konfirmasi    = $_POST['konfirmasi'];
@@ -25,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($password !== $konfirmasi) throw new Exception("Konfirmasi password tidak cocok!");
         if (strlen($password) < 6) throw new Exception("Password minimal 6 karakter!");
-        if (strlen($nik) > 17) throw new Exception("NIK tidak boleh lebih dari 17 karakter!");
 
         $checkEmail = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $checkEmail->execute([$email]);
@@ -33,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
-        $sql = "INSERT INTO users (nama, email, password, role, jenis_kelamin, usia, nama_instansi, nik, nomor_hp, foto_profil, status) 
-                VALUES (?, ?, ?, 'agen', ?, ?, ?, ?, ?, 'default.png', 'aktif')";
+        $sql = "INSERT INTO users (nama, email, password, role, jenis_kelamin, usia, nama_instansi, nomor_hp, foto_profil, status) 
+                VALUES (?, ?, ?, 'agen', ?, ?, ?, ?, 'default.png', 'aktif')";
         
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$nama, $email, $hashed_password, $jenis_kelamin, $usia, $nama_instansi, $nik, $nomor_hp]);
+        $stmt->execute([$nama, $email, $hashed_password, $jenis_kelamin, $usia, $nama_instansi, $nomor_hp]);
 
         $message = "<div class='bg-orange-100 text-orange-700 p-4 rounded-2xl mb-6 font-bold text-center border border-orange-200 animate-pulse'>Registrasi Berhasil! Silakan Login.</div>";
     } catch (Exception $e) {
@@ -90,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form action="" method="POST" class="space-y-7 relative z-10">
                 
+                <!-- Nama & Email -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Nama Lengkap</label>
@@ -109,25 +108,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Instansi / Universitas</label>
-                        <div class="relative">
-                            <i class="fas fa-building absolute left-5 top-1/2 -translate-y-1/2 text-gray-300"></i>
-                            <input type="text" name="nama_instansi" required placeholder="Asal Instansi Anda"
-                                   class="w-full pl-12 pr-5 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-orange-600 focus:ring-4 focus:ring-orange-600/10 outline-none transition-all font-semibold text-sm">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">NIK (KTP)</label>
-                        <div class="relative">
-                            <i class="fas fa-id-card absolute left-5 top-1/2 -translate-y-1/2 text-gray-300"></i>
-                            <input type="text" name="nik" required placeholder="Nomor Induk Kependudukan" maxlength="17"
-                                   class="w-full pl-12 pr-5 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-orange-600 focus:ring-4 focus:ring-orange-600/10 outline-none transition-all font-semibold text-sm">
-                        </div>
+                <!-- Instansi (full width) -->
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Instansi / Universitas</label>
+                    <div class="relative">
+                        <i class="fas fa-building absolute left-5 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <input type="text" name="nama_instansi" required placeholder="Asal Instansi Anda"
+                               class="w-full pl-12 pr-5 py-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-orange-600 focus:ring-4 focus:ring-orange-600/10 outline-none transition-all font-semibold text-sm">
                     </div>
                 </div>
 
+                <!-- WhatsApp, Usia, Gender -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">No. WhatsApp</label>
@@ -160,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <!-- Password -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Password</label>
